@@ -40,7 +40,6 @@ runs:
       shell: bash
       run: |
 
-        set -x
         case ${{ inputs.command }} in
             (build|push|buildAndPush|cleanup) ;;
             (*) echo "ERROR: invalid variable '${{ inputs.command }}' for 'command'. Allowed variables are 'build, push, buildAndPush, cleanup'";
@@ -80,10 +79,6 @@ runs:
           done
         }
 
-        function cleanup() {
-          docker image prune --all --force
-        }
-
         if [[ ${GITHUB_REF_NAME} == "main" || ${GITHUB_REF_NAME} == "master" ]]; then
           TAGS="${{ inputs.tags }}, latest"
         else
@@ -100,15 +95,12 @@ runs:
 
         if [[ ${{ inputs.command }} == "build" ]]; then
           build
-          cleanup
           exit 0
         elif [[ ${{ inputs.command }} == "push" ]]; then
           push
-          cleanup
           exit 0
         elif [[ ${{ inputs.command }} == "buildAndPush" ]]; then
           build
           push
-          cleanup
           exit 0
         fi
