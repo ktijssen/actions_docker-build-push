@@ -7,10 +7,14 @@ inputs:
     description: 'What do you want to do? (build/push/buildAndPush)'
     required: true
     default: 'build'
-  dockerfile:
-    description: 'Name of the Dockerfile (Default is $GITHUB_WORKSPACE/.)'
+  containerfile:
+    description: 'Name of the Dockerfile (Default is Dockerfile)'
     required: false
-    default: '$GITHUB_WORKSPACE/.'
+    default: 'Dockerfile'
+  context:
+    description: 'Context (Default is .)'
+    required: false
+    default: '.'
   name:
     description: 'Image Name'
     required: false
@@ -51,7 +55,7 @@ runs:
             fi
             if ! [[ ${tag} == "latest" ]]; then
               # Run Buildah build
-              docker build -t $containerTag ${{ inputs.dockerfile }}
+              docker build -t $containerTag -f ${{ inputs.containerfile }} ${{ inputs.context }}
             else
               imageId=$(docker images --filter=reference=${NAME} --format "{{.ID}}" | head -1)
               docker tag ${imageId} ${containerTag}
