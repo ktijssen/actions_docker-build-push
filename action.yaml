@@ -39,6 +39,8 @@ runs:
     - name: Buildah Build / Push / Build & Push
       shell: bash
       run: |
+
+        set -x
         case ${{ inputs.command }} in
             (build|push|buildAndPush|cleanup) ;;
             (*) echo "ERROR: invalid variable '${{ inputs.command }}' for 'command'. Allowed variables are 'build, push, buildAndPush, cleanup'";
